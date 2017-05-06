@@ -71,7 +71,7 @@ public class MatchResource {
             @Context DSLContext db
     ) {
         if (!validate(principal.getName(), myCardId, likedCardId, db)) {
-            throw new BadRequestException("Dump request");
+            throw new BadRequestException("The request is not valid");
         }
 
         MatchCustomDao.createOrUpdateLike(myCardId, likedCardId, true, db);
@@ -94,7 +94,7 @@ public class MatchResource {
             @Context DSLContext db
     ) {
         if (!validate(principal.getName(), myCardId, likedCardId, db)) {
-            throw new BadRequestException("Dump request");
+            throw new BadRequestException("The request is not valid");
         }
 
         MatchCustomDao.createOrUpdateLike(myCardId, likedCardId, false, db);

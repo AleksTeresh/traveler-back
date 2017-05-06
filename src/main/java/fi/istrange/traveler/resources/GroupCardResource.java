@@ -69,8 +69,8 @@ public class GroupCardResource {
                 .map(p -> GroupCardRes.fromEntity(
                         p,
                         participantDAO.getGroupCardParticipants(p.getId(), database, userDAO),
-                        userDAO.fetchOneByUsername(principal.getName()),
-                        userPhotoDao.fetchPhotoOidByUsername(principal.getName(), database),
+                        userDAO.fetchOneByUsername(p.getOwnerFk()),
+                        userPhotoDao.fetchPhotoOidByUsername(p.getOwnerFk(), database),
                         cardPhotoDao.fetchPhotoOidByCardId(p.getId(), database)
                 )).collect(Collectors.toList());
     }
@@ -100,11 +100,13 @@ public class GroupCardResource {
             @PathParam("id") long cardId,
             @Context DSLContext database
     ) {
+        Card card = cardDAO.fetchOneById(cardId);
+
         return GroupCardRes.fromEntity(
-                cardDAO.fetchOneById(cardId),
+                card,
                 participantDAO.getGroupCardParticipants(cardId, database, userDAO),
-                userDAO.fetchOneByUsername(principal.getName()),
-                userPhotoDao.fetchPhotoOidByUsername(principal.getName(), database),
+                userDAO.fetchOneByUsername(card.getOwnerFk()),
+                userPhotoDao.fetchPhotoOidByUsername(card.getOwnerFk(), database),
                 cardPhotoDao.fetchPhotoOidByCardId(cardId, database)
         );
     }

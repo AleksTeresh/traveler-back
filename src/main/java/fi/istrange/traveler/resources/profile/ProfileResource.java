@@ -135,10 +135,16 @@ public class ProfileResource {
             PersonalCardUpdateReq cardUpdateReq,
             @Context DSLContext database
     ) {
+        Card card = cardDao.fetchOneById(personalCardId);
+
+        if (!card.getOwnerFk().equals(principal.getName())) {
+            throw new NotAuthorizedException("Alteration of the card is now authorized");
+        }
+
         this.cardDao.update(
                 fromUpdateReq(
                         cardUpdateReq,
-                        cardDao.fetchOneById(personalCardId)
+                        card
                 )
         );
 
@@ -154,6 +160,10 @@ public class ProfileResource {
             @Context DSLContext database
     ) {
         Card card = cardDao.fetchOneById(personalCardId);
+
+        if (!card.getOwnerFk().equals(principal.getName())) {
+            throw new NotAuthorizedException("Deletion of the card is not authorized");
+        }
 
         card.setActive(false);
         cardDao.update(card);
@@ -189,6 +199,12 @@ public class ProfileResource {
             @FormDataParam("file") FormDataContentDisposition fileDetail,
             @Context DSLContext database
     ) throws IOException, SQLException {
+        Card card = cardDao.fetchOneById(cardId);
+
+        if (!card.getOwnerFk().equals(principal.getName())) {
+            throw new NotAuthorizedException("Alteration of the card is not authorized");
+        }
+
         cardPhotoDao.addPhoto(cardId, uploadedPhotoStream);
 
         return Response.accepted().build();
@@ -220,7 +236,13 @@ public class ProfileResource {
             GroupCardUpdateReq groupCardUpdateReq,
             @Context DSLContext database
     ) {
-        cardDao.update(fromUpdateReq(groupCardUpdateReq, cardDao.fetchOneById(cardId)));
+        Card card  = cardDao.fetchOneById(cardId);
+
+        if (!card.getOwnerFk().equals(principal.getName())) {
+            throw new NotAuthorizedException("Alteration of the card is not authorized");
+        }
+
+        cardDao.update(fromUpdateReq(groupCardUpdateReq, card));
         participantDao.updateGroupCardParticipants(cardId, groupCardUpdateReq.getParticipants(), database);
 
         return buildGroupCardRes(principal.getName(), cardId, database);
@@ -235,6 +257,10 @@ public class ProfileResource {
             @Context DSLContext database
     ) {
         Card card = cardDao.fetchOneById(cardId);
+
+        if (!card.getOwnerFk().equals(principal.getName())) {
+            throw new NotAuthorizedException("Deletion of the card is not authorized");
+        }
 
         card.setActive(false);
         cardDao.update(card);
@@ -280,7 +306,7 @@ public class ProfileResource {
         return GroupCardRes.fromEntity(
                 card,
                 participantDao.getGroupCardParticipants(card.getId(), db, userDAO),
-                userDAO.fetchOneByUsername(userName),
+                userDAO.fetchOneByUsername(card.getOwnerFk()),
                 userPhotoDao.fetchPhotoOidByUsername(userName, db),
                 cardPhotoDao.fetchPhotoOidByCardId(card.getId(), db)
         );
