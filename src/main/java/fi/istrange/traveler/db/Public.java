@@ -7,8 +7,11 @@ package fi.istrange.traveler.db;
 import fi.istrange.traveler.db.tables.Card;
 import fi.istrange.traveler.db.tables.CardPhoto;
 import fi.istrange.traveler.db.tables.CardUser;
+import fi.istrange.traveler.db.tables.ChatRoom;
+import fi.istrange.traveler.db.tables.ChatRoomUser;
 import fi.istrange.traveler.db.tables.GroupCard;
 import fi.istrange.traveler.db.tables.Match;
+import fi.istrange.traveler.db.tables.Message;
 import fi.istrange.traveler.db.tables.PersonalCard;
 import fi.istrange.traveler.db.tables.TravelerUser;
 import fi.istrange.traveler.db.tables.UserCredentials;
@@ -39,7 +42,7 @@ import org.jooq.impl.SchemaImpl;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Public extends SchemaImpl {
 
-    private static final long serialVersionUID = -936160445;
+    private static final long serialVersionUID = -1075829309;
 
     /**
      * The reference instance of <code>public</code>
@@ -62,6 +65,16 @@ public class Public extends SchemaImpl {
     public final CardUser CARD_USER = fi.istrange.traveler.db.tables.CardUser.CARD_USER;
 
     /**
+     * The table <code>public.chat_room</code>.
+     */
+    public final ChatRoom CHAT_ROOM = fi.istrange.traveler.db.tables.ChatRoom.CHAT_ROOM;
+
+    /**
+     * The table <code>public.chat_room_user</code>.
+     */
+    public final ChatRoomUser CHAT_ROOM_USER = fi.istrange.traveler.db.tables.ChatRoomUser.CHAT_ROOM_USER;
+
+    /**
      * The table <code>public.group_card</code>.
      */
     public final GroupCard GROUP_CARD = fi.istrange.traveler.db.tables.GroupCard.GROUP_CARD;
@@ -70,6 +83,11 @@ public class Public extends SchemaImpl {
      * The table <code>public.match</code>.
      */
     public final Match MATCH = fi.istrange.traveler.db.tables.Match.MATCH;
+
+    /**
+     * The table <code>public.message</code>.
+     */
+    public final Message MESSAGE = fi.istrange.traveler.db.tables.Message.MESSAGE;
 
     /**
      * The table <code>public.personal_card</code>.
@@ -131,8 +149,11 @@ public class Public extends SchemaImpl {
             Card.CARD,
             CardPhoto.CARD_PHOTO,
             CardUser.CARD_USER,
+            ChatRoom.CHAT_ROOM,
+            ChatRoomUser.CHAT_ROOM_USER,
             GroupCard.GROUP_CARD,
             Match.MATCH,
+            Message.MESSAGE,
             PersonalCard.PERSONAL_CARD,
             TravelerUser.TRAVELER_USER,
             UserCredentials.USER_CREDENTIALS,

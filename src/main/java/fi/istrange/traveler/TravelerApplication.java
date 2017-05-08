@@ -2,8 +2,10 @@ package fi.istrange.traveler;
 
 import fi.istrange.traveler.bundle.ApplicationBundle;
 import fi.istrange.traveler.resources.*;
+import fi.istrange.traveler.resources.profile.ChatResource;
 import fi.istrange.traveler.resources.profile.MatchResource;
 import fi.istrange.traveler.resources.profile.ProfileResource;
+import fi.istrange.traveler.sse.SseEventSourceServlet;
 import io.dropwizard.Application;
 import io.dropwizard.Configuration;
 import io.dropwizard.assets.AssetsBundle;
@@ -40,6 +42,11 @@ public class TravelerApplication extends Application<TravelerConfiguration> {
         environment.jersey().register(new ProfileResource(applicationBundle));
         environment.jersey().register(new ImageResource(applicationBundle));
         environment.jersey().register(new MatchResource(applicationBundle));
+        environment.jersey().register(new ChatResource(applicationBundle));
+
+        // environment.getApplicationContext().addServlet(SseEventSourceServlet.class, "/sse");
+        // environment.servlets().addServlet("sse", SseEventSourceServlet.class);
+        environment.getApplicationContext().getServletHandler().addServletWithMapping(SseEventSourceServlet.class, "/sse/*");
     }
 
     @Override
