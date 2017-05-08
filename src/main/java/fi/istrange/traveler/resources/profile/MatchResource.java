@@ -2,12 +2,12 @@ package fi.istrange.traveler.resources.profile;
 
 import fi.istrange.traveler.api.*;
 import fi.istrange.traveler.bundle.ApplicationBundle;
-import fi.istrange.traveler.dao.CardPhotoDao;
-import fi.istrange.traveler.dao.CustomCardDao;
-import fi.istrange.traveler.dao.MatchCustomDao;
-import fi.istrange.traveler.dao.UserPhotoDao;
+import fi.istrange.traveler.dao.*;
 import fi.istrange.traveler.db.Tables;
+import fi.istrange.traveler.db.tables.daos.CardDao;
+import fi.istrange.traveler.db.tables.daos.ChatRoomDao;
 import fi.istrange.traveler.db.tables.daos.TravelerUserDao;
+import fi.istrange.traveler.db.tables.pojos.ChatRoom;
 import io.dropwizard.auth.Auth;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -20,6 +20,8 @@ import javax.validation.constraints.NotNull;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
+import java.sql.Date;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -35,13 +37,19 @@ public class MatchResource {
     private final TravelerUserDao userDAO;
     private final UserPhotoDao userPhotoDao;
     private final CardPhotoDao cardPhotoDao;
+    private final ChatRoomDao chatRoomDao;
+    private final ChatRoomUserDao chatRoomUserDao;
+    private final CardDao cardDao;
 
     public MatchResource(
             ApplicationBundle applicationBundle
     ) {
+        this.chatRoomDao = new ChatRoomDao(applicationBundle.getJooqBundle().getConfiguration());
+        this.chatRoomUserDao = new ChatRoomUserDao();
         this.userDAO = new TravelerUserDao(applicationBundle.getJooqBundle().getConfiguration());
         this.userPhotoDao = new UserPhotoDao(applicationBundle.getJooqBundle().getConfiguration().connectionProvider());
         this.cardPhotoDao = new CardPhotoDao(applicationBundle.getJooqBundle().getConfiguration().connectionProvider());
+        this.cardDao = new CardDao(applicationBundle.getJooqBundle().getConfiguration());
     }
 
     /**
@@ -76,7 +84,32 @@ public class MatchResource {
 
         MatchCustomDao.createOrUpdateLike(myCardId, likedCardId, true, db);
 
-        return new MatchResultRes(MatchCustomDao.isMatch(myCardId, likedCardId, db));
+        MatchResultRes result =  new MatchResultRes(MatchCustomDao.isMatch(myCardId, likedCardId, db));
+
+        if (result.matched) {
+            String targetUsername = cardDao.fetchOneById(likedCardId).getOwnerFk();
+            List<Long> myRoomIds = chatRoomUserDao.fetchAllByUsername(principal.getName(), db)
+                    .stream()
+                    .map(p -> p.getChatRoomId())
+                    .collect(Collectors.toList());
+            List<Long> targetUserRoomIds = chatRoomUserDao.fetchAllByUsername(targetUsername, db)
+                    .stream()
+                    .map(p -> p.getChatRoomId())
+                    .collect(Collectors.toList());
+
+            // if there are no chatrooms between the users already, create one
+            if (myRoomIds.stream()
+                    .filter(p -> targetUserRoomIds.indexOf(p) != -1)
+                    .count() == 0) {
+                List<String> chatters = new ArrayList<>();
+                chatters.add(principal.getName());
+                chatters.add(targetUsername);
+
+                this.createChatRoom(chatters, db);
+            }
+        }
+
+        return result;
     }
 
     /**
@@ -224,5 +257,20 @@ public class MatchResource {
         if (!CustomCardDao.isUserAssociatedWithCard(userName, likerCardId, db)) return false;
         if (CustomCardDao.isUserAssociatedWithCard(userName, likedCardId, db)) return false;
         return true;
+    }
+
+    public void createChatRoom(
+            List<String> usernames,
+            DSLContext db
+    ) {
+        Long chatRoomId = chatRoomDao.count() + 1;
+
+        chatRoomDao.insert(new ChatRoom(
+                chatRoomId,
+                true,
+                new Date(new java.util.Date().getTime())
+        ));
+
+        chatRoomUserDao.insert(usernames, chatRoomId, db);
     }
 }

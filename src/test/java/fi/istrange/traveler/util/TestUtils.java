@@ -1,11 +1,9 @@
 package fi.istrange.traveler.util;
 
 import fi.istrange.traveler.db.Tables;
-import liquibase.logging.core.DefaultLoggerConfiguration;
 import org.jooq.Configuration;
 import org.jooq.DSLContext;
 import org.jooq.SQLDialect;
-import org.jooq.conf.Settings;
 import org.jooq.impl.DSL;
 import org.jooq.impl.DefaultConfiguration;
 import org.junit.After;
@@ -59,6 +57,9 @@ public class TestUtils {
     }
 
     public static void deleteAllTablesContent(DSLContext db) {
+        db.delete(Tables.CHAT_ROOM_USER).execute();
+        db.delete(Tables.MESSAGE).execute();
+        db.delete(Tables.CHAT_ROOM).execute();
         db.delete(Tables.USER_PHOTO).execute();
         db.delete(Tables.CARD_PHOTO).execute();
         db.delete(Tables.PERSONAL_CARD).execute();

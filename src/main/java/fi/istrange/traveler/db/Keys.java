@@ -7,8 +7,11 @@ package fi.istrange.traveler.db;
 import fi.istrange.traveler.db.tables.Card;
 import fi.istrange.traveler.db.tables.CardPhoto;
 import fi.istrange.traveler.db.tables.CardUser;
+import fi.istrange.traveler.db.tables.ChatRoom;
+import fi.istrange.traveler.db.tables.ChatRoomUser;
 import fi.istrange.traveler.db.tables.GroupCard;
 import fi.istrange.traveler.db.tables.Match;
+import fi.istrange.traveler.db.tables.Message;
 import fi.istrange.traveler.db.tables.PersonalCard;
 import fi.istrange.traveler.db.tables.TravelerUser;
 import fi.istrange.traveler.db.tables.UserCredentials;
@@ -16,8 +19,11 @@ import fi.istrange.traveler.db.tables.UserPhoto;
 import fi.istrange.traveler.db.tables.records.CardPhotoRecord;
 import fi.istrange.traveler.db.tables.records.CardRecord;
 import fi.istrange.traveler.db.tables.records.CardUserRecord;
+import fi.istrange.traveler.db.tables.records.ChatRoomRecord;
+import fi.istrange.traveler.db.tables.records.ChatRoomUserRecord;
 import fi.istrange.traveler.db.tables.records.GroupCardRecord;
 import fi.istrange.traveler.db.tables.records.MatchRecord;
+import fi.istrange.traveler.db.tables.records.MessageRecord;
 import fi.istrange.traveler.db.tables.records.PersonalCardRecord;
 import fi.istrange.traveler.db.tables.records.TravelerUserRecord;
 import fi.istrange.traveler.db.tables.records.UserCredentialsRecord;
@@ -56,8 +62,10 @@ public class Keys {
     // -------------------------------------------------------------------------
 
     public static final UniqueKey<CardRecord> CARD_PKEY = UniqueKeys0.CARD_PKEY;
+    public static final UniqueKey<ChatRoomRecord> CHAT_ROOM_PK = UniqueKeys0.CHAT_ROOM_PK;
     public static final UniqueKey<GroupCardRecord> GROUP_CARD_PKEY = UniqueKeys0.GROUP_CARD_PKEY;
     public static final UniqueKey<MatchRecord> TRAVELER_MATCH_PK = UniqueKeys0.TRAVELER_MATCH_PK;
+    public static final UniqueKey<MessageRecord> MESSAGE_PK = UniqueKeys0.MESSAGE_PK;
     public static final UniqueKey<PersonalCardRecord> PERSONAL_CARD_PKEY = UniqueKeys0.PERSONAL_CARD_PKEY;
     public static final UniqueKey<TravelerUserRecord> TRAVELER_USER_PKEY = UniqueKeys0.TRAVELER_USER_PKEY;
 
@@ -69,9 +77,13 @@ public class Keys {
     public static final ForeignKey<CardPhotoRecord, CardRecord> CARD_PHOTO__CARD_PHOTO_FKEY = ForeignKeys0.CARD_PHOTO__CARD_PHOTO_FKEY;
     public static final ForeignKey<CardUserRecord, GroupCardRecord> CARD_USER__CARD_USER_CARD_ID_FKEY = ForeignKeys0.CARD_USER__CARD_USER_CARD_ID_FKEY;
     public static final ForeignKey<CardUserRecord, TravelerUserRecord> CARD_USER__CARD_USER_USERNAME_FKEY = ForeignKeys0.CARD_USER__CARD_USER_USERNAME_FKEY;
+    public static final ForeignKey<ChatRoomUserRecord, ChatRoomRecord> CHAT_ROOM_USER__CHAT_ROOM_USER_CHAT_ROOM_ID_FKEY = ForeignKeys0.CHAT_ROOM_USER__CHAT_ROOM_USER_CHAT_ROOM_ID_FKEY;
+    public static final ForeignKey<ChatRoomUserRecord, TravelerUserRecord> CHAT_ROOM_USER__CHAT_ROOM_USER_USERNAME_FKEY = ForeignKeys0.CHAT_ROOM_USER__CHAT_ROOM_USER_USERNAME_FKEY;
     public static final ForeignKey<GroupCardRecord, CardRecord> GROUP_CARD__GROUP_CARD_ID_FKEY = ForeignKeys0.GROUP_CARD__GROUP_CARD_ID_FKEY;
     public static final ForeignKey<MatchRecord, CardRecord> MATCH__MATCH_LIKER_ID_FKEY = ForeignKeys0.MATCH__MATCH_LIKER_ID_FKEY;
     public static final ForeignKey<MatchRecord, CardRecord> MATCH__MATCH_LIKED_ID_FKEY = ForeignKeys0.MATCH__MATCH_LIKED_ID_FKEY;
+    public static final ForeignKey<MessageRecord, TravelerUserRecord> MESSAGE__MESSAGE_USERNAME_FKEY = ForeignKeys0.MESSAGE__MESSAGE_USERNAME_FKEY;
+    public static final ForeignKey<MessageRecord, ChatRoomRecord> MESSAGE__MESSAGE_CHAT_ROOM_ID_FKEY = ForeignKeys0.MESSAGE__MESSAGE_CHAT_ROOM_ID_FKEY;
     public static final ForeignKey<PersonalCardRecord, CardRecord> PERSONAL_CARD__PERSONAL_CARD_ID_FKEY = ForeignKeys0.PERSONAL_CARD__PERSONAL_CARD_ID_FKEY;
     public static final ForeignKey<UserCredentialsRecord, TravelerUserRecord> USER_CREDENTIALS__USER_CREDENTIALS_USERNAME_FKEY = ForeignKeys0.USER_CREDENTIALS__USER_CREDENTIALS_USERNAME_FKEY;
     public static final ForeignKey<UserPhotoRecord, TravelerUserRecord> USER_PHOTO__USER_PHOTO_USERNAME_FKEY = ForeignKeys0.USER_PHOTO__USER_PHOTO_USERNAME_FKEY;
@@ -86,8 +98,10 @@ public class Keys {
 
     private static class UniqueKeys0 extends AbstractKeys {
         public static final UniqueKey<CardRecord> CARD_PKEY = createUniqueKey(Card.CARD, "card_pkey", Card.CARD.ID);
+        public static final UniqueKey<ChatRoomRecord> CHAT_ROOM_PK = createUniqueKey(ChatRoom.CHAT_ROOM, "chat_room_pk", ChatRoom.CHAT_ROOM.ID);
         public static final UniqueKey<GroupCardRecord> GROUP_CARD_PKEY = createUniqueKey(GroupCard.GROUP_CARD, "group_card_pkey", GroupCard.GROUP_CARD.ID);
         public static final UniqueKey<MatchRecord> TRAVELER_MATCH_PK = createUniqueKey(Match.MATCH, "traveler_match_pk", Match.MATCH.LIKER_CARD_ID, Match.MATCH.LIKED_CARD_ID);
+        public static final UniqueKey<MessageRecord> MESSAGE_PK = createUniqueKey(Message.MESSAGE, "message_pk", Message.MESSAGE.ID);
         public static final UniqueKey<PersonalCardRecord> PERSONAL_CARD_PKEY = createUniqueKey(PersonalCard.PERSONAL_CARD, "personal_card_pkey", PersonalCard.PERSONAL_CARD.ID);
         public static final UniqueKey<TravelerUserRecord> TRAVELER_USER_PKEY = createUniqueKey(TravelerUser.TRAVELER_USER, "traveler_user_pkey", TravelerUser.TRAVELER_USER.USERNAME);
     }
@@ -97,9 +111,13 @@ public class Keys {
         public static final ForeignKey<CardPhotoRecord, CardRecord> CARD_PHOTO__CARD_PHOTO_FKEY = createForeignKey(fi.istrange.traveler.db.Keys.CARD_PKEY, CardPhoto.CARD_PHOTO, "card_photo__card_photo_fkey", CardPhoto.CARD_PHOTO.CARD_ID);
         public static final ForeignKey<CardUserRecord, GroupCardRecord> CARD_USER__CARD_USER_CARD_ID_FKEY = createForeignKey(fi.istrange.traveler.db.Keys.GROUP_CARD_PKEY, CardUser.CARD_USER, "card_user__card_user_card_id_fkey", CardUser.CARD_USER.CARD_ID);
         public static final ForeignKey<CardUserRecord, TravelerUserRecord> CARD_USER__CARD_USER_USERNAME_FKEY = createForeignKey(fi.istrange.traveler.db.Keys.TRAVELER_USER_PKEY, CardUser.CARD_USER, "card_user__card_user_username_fkey", CardUser.CARD_USER.USERNAME);
+        public static final ForeignKey<ChatRoomUserRecord, ChatRoomRecord> CHAT_ROOM_USER__CHAT_ROOM_USER_CHAT_ROOM_ID_FKEY = createForeignKey(fi.istrange.traveler.db.Keys.CHAT_ROOM_PK, ChatRoomUser.CHAT_ROOM_USER, "chat_room_user__chat_room_user_chat_room_id_fkey", ChatRoomUser.CHAT_ROOM_USER.CHAT_ROOM_ID);
+        public static final ForeignKey<ChatRoomUserRecord, TravelerUserRecord> CHAT_ROOM_USER__CHAT_ROOM_USER_USERNAME_FKEY = createForeignKey(fi.istrange.traveler.db.Keys.TRAVELER_USER_PKEY, ChatRoomUser.CHAT_ROOM_USER, "chat_room_user__chat_room_user_username_fkey", ChatRoomUser.CHAT_ROOM_USER.USERNAME);
         public static final ForeignKey<GroupCardRecord, CardRecord> GROUP_CARD__GROUP_CARD_ID_FKEY = createForeignKey(fi.istrange.traveler.db.Keys.CARD_PKEY, GroupCard.GROUP_CARD, "group_card__group_card_id_fkey", GroupCard.GROUP_CARD.ID);
         public static final ForeignKey<MatchRecord, CardRecord> MATCH__MATCH_LIKER_ID_FKEY = createForeignKey(fi.istrange.traveler.db.Keys.CARD_PKEY, Match.MATCH, "match__match_liker_id_fkey", Match.MATCH.LIKER_CARD_ID);
         public static final ForeignKey<MatchRecord, CardRecord> MATCH__MATCH_LIKED_ID_FKEY = createForeignKey(fi.istrange.traveler.db.Keys.CARD_PKEY, Match.MATCH, "match__match_liked_id_fkey", Match.MATCH.LIKED_CARD_ID);
+        public static final ForeignKey<MessageRecord, TravelerUserRecord> MESSAGE__MESSAGE_USERNAME_FKEY = createForeignKey(fi.istrange.traveler.db.Keys.TRAVELER_USER_PKEY, Message.MESSAGE, "message__message_username_fkey", Message.MESSAGE.USERNAME);
+        public static final ForeignKey<MessageRecord, ChatRoomRecord> MESSAGE__MESSAGE_CHAT_ROOM_ID_FKEY = createForeignKey(fi.istrange.traveler.db.Keys.CHAT_ROOM_PK, Message.MESSAGE, "message__message_chat_room_id_fkey", Message.MESSAGE.CHAT_ROOM_ID);
         public static final ForeignKey<PersonalCardRecord, CardRecord> PERSONAL_CARD__PERSONAL_CARD_ID_FKEY = createForeignKey(fi.istrange.traveler.db.Keys.CARD_PKEY, PersonalCard.PERSONAL_CARD, "personal_card__personal_card_id_fkey", PersonalCard.PERSONAL_CARD.ID);
         public static final ForeignKey<UserCredentialsRecord, TravelerUserRecord> USER_CREDENTIALS__USER_CREDENTIALS_USERNAME_FKEY = createForeignKey(fi.istrange.traveler.db.Keys.TRAVELER_USER_PKEY, UserCredentials.USER_CREDENTIALS, "user_credentials__user_credentials_username_fkey", UserCredentials.USER_CREDENTIALS.USERNAME);
         public static final ForeignKey<UserPhotoRecord, TravelerUserRecord> USER_PHOTO__USER_PHOTO_USERNAME_FKEY = createForeignKey(fi.istrange.traveler.db.Keys.TRAVELER_USER_PKEY, UserPhoto.USER_PHOTO, "user_photo__user_photo_username_fkey", UserPhoto.USER_PHOTO.USERNAME);
