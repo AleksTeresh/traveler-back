@@ -6,7 +6,9 @@ import fi.istrange.traveler.dao.*;
 import fi.istrange.traveler.db.Tables;
 import fi.istrange.traveler.db.tables.daos.CardDao;
 import fi.istrange.traveler.db.tables.daos.ChatRoomDao;
+import fi.istrange.traveler.db.tables.daos.MatchDao;
 import fi.istrange.traveler.db.tables.daos.TravelerUserDao;
+import fi.istrange.traveler.db.tables.pojos.Card;
 import fi.istrange.traveler.db.tables.pojos.ChatRoom;
 import io.dropwizard.auth.Auth;
 import io.swagger.annotations.Api;
@@ -40,6 +42,7 @@ public class MatchResource {
     private final ChatRoomDao chatRoomDao;
     private final ChatRoomUserDao chatRoomUserDao;
     private final CardDao cardDao;
+    private final MatchDao matchDao;
 
     public MatchResource(
             ApplicationBundle applicationBundle
@@ -50,6 +53,7 @@ public class MatchResource {
         this.userPhotoDao = new UserPhotoDao(applicationBundle.getJooqBundle().getConfiguration().connectionProvider());
         this.cardPhotoDao = new CardPhotoDao(applicationBundle.getJooqBundle().getConfiguration().connectionProvider());
         this.cardDao = new CardDao(applicationBundle.getJooqBundle().getConfiguration());
+        this.matchDao = new MatchDao(applicationBundle.getJooqBundle().getConfiguration());
     }
 
     /**
@@ -133,6 +137,25 @@ public class MatchResource {
         MatchCustomDao.createOrUpdateLike(myCardId, likedCardId, false, db);
 
         return new MatchResultRes(MatchCustomDao.isMatch(myCardId, likedCardId, db));
+    }
+
+    @GET
+    @Path("/{id}")
+    @ApiOperation("Get cards (with evaluation result) evaluated by the card with the provided id")
+    public List<EvaluatedCardRes> getEvaluated(
+            @ApiParam(hidden = true) @Auth DefaultJwtCookiePrincipal principal,
+            @PathParam("id") long cardId
+    ) {
+        Card ownCard = cardDao.fetchOneById(cardId);
+
+        if (!ownCard.getOwnerFk().equals(principal.getName())) {
+            throw new NotAuthorizedException("Access to the card's information is unauthorized");
+        }
+
+        return matchDao.fetchByLikerCardId(cardId)
+                .stream()
+                .map(p -> EvaluatedCardRes.fromEntity(p.getLikedCardId(), p.getLikeDecision()))
+                .collect(Collectors.toList());
     }
 
 
