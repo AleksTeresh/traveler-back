@@ -148,6 +148,10 @@ public class MatchResource {
     ) {
         Card ownCard = cardDao.fetchOneById(cardId);
 
+        if (ownCard == null) {
+            throw new NotFoundException("The card with the given id does not exist");
+        }
+
         if (!ownCard.getOwnerFk().equals(principal.getName())) {
             throw new NotAuthorizedException("Access to the card's information is unauthorized");
         }
