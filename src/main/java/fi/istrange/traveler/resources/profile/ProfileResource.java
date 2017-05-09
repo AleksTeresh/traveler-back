@@ -137,6 +137,8 @@ public class ProfileResource {
     ) {
         Card card = cardDao.fetchOneById(personalCardId);
 
+        checkCardExistence(card);
+
         if (!card.getOwnerFk().equals(principal.getName())) {
             throw new NotAuthorizedException("Alteration of the card is now authorized");
         }
@@ -160,6 +162,8 @@ public class ProfileResource {
             @Context DSLContext database
     ) {
         Card card = cardDao.fetchOneById(personalCardId);
+
+        checkCardExistence(card);
 
         if (!card.getOwnerFk().equals(principal.getName())) {
             throw new NotAuthorizedException("Deletion of the card is not authorized");
@@ -201,6 +205,8 @@ public class ProfileResource {
     ) throws IOException, SQLException {
         Card card = cardDao.fetchOneById(cardId);
 
+        checkCardExistence(card);
+
         if (!card.getOwnerFk().equals(principal.getName())) {
             throw new NotAuthorizedException("Alteration of the card is not authorized");
         }
@@ -238,6 +244,8 @@ public class ProfileResource {
     ) {
         Card card  = cardDao.fetchOneById(cardId);
 
+        checkCardExistence(card);
+
         if (!card.getOwnerFk().equals(principal.getName())) {
             throw new NotAuthorizedException("Alteration of the card is not authorized");
         }
@@ -257,6 +265,8 @@ public class ProfileResource {
             @Context DSLContext database
     ) {
         Card card = cardDao.fetchOneById(cardId);
+
+        checkCardExistence(card);
 
         if (!card.getOwnerFk().equals(principal.getName())) {
             throw new NotAuthorizedException("Deletion of the card is not authorized");
@@ -310,6 +320,14 @@ public class ProfileResource {
                 userPhotoDao.fetchPhotoOidByUsername(userName, db),
                 cardPhotoDao.fetchPhotoOidByCardId(card.getId(), db)
         );
+    }
+
+    private boolean checkCardExistence(Card card) {
+        if (card == null) {
+            throw new NotFoundException("The card with the given id does not exist");
+        }
+
+        return true;
     }
 
     private static Card fromUpdateReq(CardUpdateReq req, Card card) {
