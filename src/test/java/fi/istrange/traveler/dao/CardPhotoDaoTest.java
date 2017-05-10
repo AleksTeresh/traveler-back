@@ -1,6 +1,5 @@
 package fi.istrange.traveler.dao;
 
-import com.google.common.collect.Sets;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -11,7 +10,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 /**
  * Created by rohan on 5/2/17.
@@ -28,7 +28,7 @@ public class CardPhotoDaoTest extends AbstractDaoTest {
 
     @Before
     public void setUpp() {
-        createUser(userName, Date.valueOf("1999-10-10"), "gay");
+        createUser(userName, Date.valueOf("1999-10-10"), "other");
     }
 
     @Test

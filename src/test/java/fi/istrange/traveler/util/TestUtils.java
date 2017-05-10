@@ -1,11 +1,9 @@
 package fi.istrange.traveler.util;
 
 import fi.istrange.traveler.db.Tables;
-import liquibase.logging.core.DefaultLoggerConfiguration;
 import org.jooq.Configuration;
 import org.jooq.DSLContext;
 import org.jooq.SQLDialect;
-import org.jooq.conf.Settings;
 import org.jooq.impl.DSL;
 import org.jooq.impl.DefaultConfiguration;
 import org.junit.After;
@@ -59,6 +57,9 @@ public class TestUtils {
     }
 
     public static void deleteAllTablesContent(DSLContext db) {
+        db.delete(Tables.CHAT_ROOM_USER).execute();
+        db.delete(Tables.MESSAGE).execute();
+        db.delete(Tables.CHAT_ROOM).execute();
         db.delete(Tables.USER_PHOTO).execute();
         db.delete(Tables.CARD_PHOTO).execute();
         db.delete(Tables.PERSONAL_CARD).execute();
@@ -204,7 +205,7 @@ public class TestUtils {
 
     protected Long createUserWithPersonalTravelCard(String userName) {
         return createUserWithPersonalTravelCard(
-                userName, Date.valueOf("2017-10-04"), "gay",
+                userName, Date.valueOf("2017-10-04"), "other",
                 true,
                 Date.valueOf("2017-10-05"), Date.valueOf("2017-10-14"),
                 BigDecimal.ONE, BigDecimal.TEN
@@ -213,7 +214,7 @@ public class TestUtils {
 
     protected Long createUserWithGroupTravelCard(String userName) {
         return createUserWithGroupTravelCard(
-                userName, Date.valueOf("2017-10-04"), "gay",
+                userName, Date.valueOf("2017-10-04"), "other",
                 true,
                 Date.valueOf("2017-10-05"), Date.valueOf("2017-10-14"),
                 BigDecimal.ONE, BigDecimal.TEN

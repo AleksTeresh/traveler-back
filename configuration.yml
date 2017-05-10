@@ -1,6 +1,9 @@
 defaultName: Traveler
 
 server:
+  gzip:
+    enabled: false
+
   rootPath: /api/
 
   applicationConnectors:

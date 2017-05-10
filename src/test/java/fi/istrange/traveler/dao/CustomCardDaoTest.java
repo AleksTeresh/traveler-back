@@ -28,7 +28,7 @@ public class CustomCardDaoTest extends AbstractDaoTest {
 
     @Test
     public void isPersonalTravelCard_returnTrue() {
-        createUser("a", Date.valueOf("1234-10-10"), "gay");
+        createUser("a", Date.valueOf("1234-10-10"), "other");
         IntStream.range(0, TEST_ITERATION).forEach(
                 i -> {
                     Long card = createPersonalTravelCardForUser("a");
@@ -47,7 +47,7 @@ public class CustomCardDaoTest extends AbstractDaoTest {
 
     @Test
     public void isGroupTravelCard_returnTrue() {
-        createUser("a", Date.valueOf("1234-10-10"), "gay");
+        createUser("a", Date.valueOf("1234-10-10"), "other");
         IntStream.range(0, TEST_ITERATION).forEach(
                 i -> {
                     Long card = createGroupTravelCardForUser("a");
@@ -68,7 +68,7 @@ public class CustomCardDaoTest extends AbstractDaoTest {
     @Test
     public void isActiveTravelCard_returnFalse_inactiveTravellCard() {
         // case invalid travel card
-        createUser("a", Date.valueOf("1999-10-10"), "gay");
+        createUser("a", Date.valueOf("1999-10-10"), "other");
         IntStream.range(0, TEST_ITERATION).forEach(
                 i -> {
                     Long id = createPersonalTravelCardForUser("a");
@@ -83,7 +83,7 @@ public class CustomCardDaoTest extends AbstractDaoTest {
     @Test
     public void isActiveTravelCard_returnTrue() {
         // case invalid travel card
-        createUser("a", Date.valueOf("1999-10-10"), "gay");
+        createUser("a", Date.valueOf("1999-10-10"), "other");
         IntStream.range(0, TEST_ITERATION).forEach(
                 i -> {
                     Long id = createPersonalTravelCardForUser("a");
@@ -173,15 +173,5 @@ public class CustomCardDaoTest extends AbstractDaoTest {
                     ));
                 }
         );
-    }
-
-    @Test
-    public void fetchByPosition() {
-        // TODO test
-    }
-
-    @Test
-    public void fetchByUsername() {
-        // TODO test
     }
 }

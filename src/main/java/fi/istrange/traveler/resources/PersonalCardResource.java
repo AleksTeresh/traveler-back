@@ -70,8 +70,8 @@ public class PersonalCardResource {
                 .filter(p -> !p.getOwnerFk().equals(principal.getName()))
                 .map(p -> PersonalCardRes.fromEntity(
                         p,
-                        userDAO.fetchOneByUsername(principal.getName()),
-                        userPhotoDao.fetchPhotoOidByUsername(principal.getName(), database),
+                        userDAO.fetchOneByUsername(p.getOwnerFk()),
+                        userPhotoDao.fetchPhotoOidByUsername(p.getOwnerFk(), database),
                         cardPhotoDao.fetchPhotoOidByCardId(p.getId(), database)
                 ))
                 .collect(Collectors.toList());
@@ -110,8 +110,8 @@ public class PersonalCardResource {
                 .filter(p -> p.getId() == personalCardId)
                 .map(p -> PersonalCardRes.fromEntity(
                         p,
-                        userDAO.fetchOneByUsername(principal.getName()),
-                        userPhotoDao.fetchPhotoOidByUsername(principal.getName(), database),
+                        userDAO.fetchOneByUsername(p.getOwnerFk()),
+                        userPhotoDao.fetchPhotoOidByUsername(p.getOwnerFk(), database),
                         cardPhotoDao.fetchPhotoOidByCardId(personalCardId, database)
                 ))
                 .findFirst();
