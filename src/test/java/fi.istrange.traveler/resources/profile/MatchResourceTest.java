@@ -239,7 +239,7 @@ public class MatchResourceTest extends AbstractResourceTest {
     public void isAMatch_group_personal_likerAsParticipant() throws Exception {
         long card1 = createUserWithGroupTravelCard(user01);
         final String participant = "participant";
-        createUser(participant, Date.valueOf("2019-10-10"), "gay");
+        createUser(participant, Date.valueOf("2019-10-10"), "other");
         addUserToGroupCard(participant, card1);
         long card2 = createUserWithPersonalTravelCard(user02);
         testMatch(participant, card1, user02, card2);
@@ -256,7 +256,7 @@ public class MatchResourceTest extends AbstractResourceTest {
     public void isAMatch_group_group_liker01AsParticipant() throws Exception {
         long card1 = createUserWithGroupTravelCard(user01);
         final String liker01 = "participant";
-        createUser(liker01, Date.valueOf("2019-10-10"), "gay");
+        createUser(liker01, Date.valueOf("2019-10-10"), "other");
         addUserToGroupCard(liker01, card1);
         long card2 = createUserWithGroupTravelCard(user02);
         testMatch(liker01, card1, user02, card2);
@@ -267,11 +267,11 @@ public class MatchResourceTest extends AbstractResourceTest {
     public void isAMatch_group_group_bothLikerAsParticipant() throws Exception {
         long card1 = createUserWithGroupTravelCard(user01);
         final String liker01 = "liker01";
-        createUser(liker01, Date.valueOf("2019-10-10"), "gay");
+        createUser(liker01, Date.valueOf("2019-10-10"), "other");
         addUserToGroupCard(liker01, card1);
         long card2 = createUserWithGroupTravelCard(user02);
         final String liker02 = "liker02";
-        createUser(liker02, Date.valueOf("2019-10-10"), "gay");
+        createUser(liker02, Date.valueOf("2019-10-10"), "other");
         addUserToGroupCard(liker02, card2);
         testMatch(liker01, card1, liker02, card2);
     }

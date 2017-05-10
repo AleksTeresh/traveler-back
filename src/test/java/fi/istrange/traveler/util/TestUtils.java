@@ -205,7 +205,7 @@ public class TestUtils {
 
     protected Long createUserWithPersonalTravelCard(String userName) {
         return createUserWithPersonalTravelCard(
-                userName, Date.valueOf("2017-10-04"), "gay",
+                userName, Date.valueOf("2017-10-04"), "other",
                 true,
                 Date.valueOf("2017-10-05"), Date.valueOf("2017-10-14"),
                 BigDecimal.ONE, BigDecimal.TEN
@@ -214,7 +214,7 @@ public class TestUtils {
 
     protected Long createUserWithGroupTravelCard(String userName) {
         return createUserWithGroupTravelCard(
-                userName, Date.valueOf("2017-10-04"), "gay",
+                userName, Date.valueOf("2017-10-04"), "other",
                 true,
                 Date.valueOf("2017-10-05"), Date.valueOf("2017-10-14"),
                 BigDecimal.ONE, BigDecimal.TEN
