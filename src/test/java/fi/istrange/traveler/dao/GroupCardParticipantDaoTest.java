@@ -41,7 +41,7 @@ public class GroupCardParticipantDaoTest extends AbstractDaoTest {
         IntStream.range(0, TEST_ITERATION).forEach(
                 i -> {
                     String participant = String.valueOf(i);
-                    createUser(participant, Date.valueOf("2000-10-10"), "gay");
+                    createUser(participant, Date.valueOf("2000-10-10"), "other");
                     addUserToGroupCard(participant, groupCard);
                     participants.add(participant);
                 });
@@ -59,7 +59,7 @@ public class GroupCardParticipantDaoTest extends AbstractDaoTest {
         IntStream.range(0, TEST_ITERATION).forEach(
                 i -> {
                     String participant = String.valueOf(i);
-                    createUser(participant, Date.valueOf("2000-10-10"), "gay");
+                    createUser(participant, Date.valueOf("2000-10-10"), "other");
                     GroupCardParticipantDao.addGroupCardParticipant(groupCard, participant, db);
                     participants.add(participant);
                 });
@@ -68,15 +68,5 @@ public class GroupCardParticipantDaoTest extends AbstractDaoTest {
                         .stream().map( travelerUser -> travelerUser.getUsername())
                         .collect(Collectors.toSet())
         ));
-    }
-
-    @Test
-    public void deleteGroupCardParticipant() {
-        assertTrue(true);
-    }
-
-    @Test
-    public void updateGroupCardParticipants() {
-        assertTrue(true);
     }
 }

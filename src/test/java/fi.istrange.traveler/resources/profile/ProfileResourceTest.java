@@ -80,11 +80,6 @@ public class ProfileResourceTest extends AbstractResourceTest {
     }
 
     @Test
-    public void changePassword() throws Exception {
-        assertTrue(true);
-    }
-
-    @Test
     public void getPersonalCards_emptyList() throws Exception {
         List<PersonalCardRes> res = pr.getPersonalCards(new DefaultJwtCookiePrincipal(userName), false, 10, db);
         assertTrue(res.isEmpty());
@@ -148,11 +143,6 @@ public class ProfileResourceTest extends AbstractResourceTest {
         );
         System.out.println(res);
         assertFalse(res.getActive());
-    }
-
-    @Test
-    public void uploadPersonalCardPhoto() throws Exception {
-
     }
 
     @Test
@@ -222,10 +212,4 @@ public class ProfileResourceTest extends AbstractResourceTest {
         System.out.println(res);
         assertFalse(res.getActive());
     }
-
-    @Test
-    public void uploadPhoto() throws Exception {
-
-    }
-
 }

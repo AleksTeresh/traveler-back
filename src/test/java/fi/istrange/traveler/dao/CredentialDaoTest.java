@@ -1,6 +1,5 @@
 package fi.istrange.traveler.dao;
 
-import fi.istrange.traveler.db.tables.UserCredentials;
 import org.junit.Test;
 
 import java.sql.Date;
@@ -8,8 +7,9 @@ import java.util.Optional;
 import java.util.Random;
 import java.util.stream.IntStream;
 
-import static fi.istrange.traveler.dao.CredentialDao.*;
-import static org.junit.Assert.*;
+import static fi.istrange.traveler.dao.CredentialDao.fetchByUsername;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Created by rohan on 5/2/17.
@@ -32,7 +32,7 @@ public class CredentialDaoTest extends AbstractDaoTest {
     public void addUser() {
         IntStream.range(0, TEST_ITERATION).forEach(
             i -> {
-                createUser(String.valueOf(i), Date.valueOf("2015-10-10"), "gay");
+                createUser(String.valueOf(i), Date.valueOf("2015-10-10"), "other");
                 CredentialDao.addUser(String.valueOf(i), "youShallNotPass", db);
                 Optional<fi.istrange.traveler.db.tables.pojos.UserCredentials> result = fetchByUsername(String.valueOf(i), db);
                 assertTrue(result.isPresent());
@@ -46,7 +46,7 @@ public class CredentialDaoTest extends AbstractDaoTest {
         IntStream.range(0, TEST_ITERATION).forEach(
                 i -> {
                     String userName = String.valueOf(i);
-                    createUser(userName, Date.valueOf("2015-10-10"), "gay");
+                    createUser(userName, Date.valueOf("2015-10-10"), "other");
                     CredentialDao.addUser(userName, "youShallNotPass", db);
                     CredentialDao.deactivateUser(userName, db);
                     Optional<fi.istrange.traveler.db.tables.pojos.UserCredentials> result = fetchByUsername(String.valueOf(i), db);

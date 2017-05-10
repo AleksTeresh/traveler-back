@@ -5,11 +5,9 @@ import fi.istrange.traveler.TravelerConfiguration;
 import fi.istrange.traveler.bundle.ApplicationBundle;
 import fi.istrange.traveler.db.Tables;
 import fi.istrange.traveler.util.TestUtils;
-import org.jooq.Configuration;
 import org.jooq.DSLContext;
 import org.jooq.SQLDialect;
 import org.jooq.impl.DSL;
-import org.jooq.impl.DefaultConfiguration;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -20,7 +18,6 @@ import java.sql.Date;
 import java.sql.DriverManager;
 
 import static fi.istrange.traveler.db.Tables.*;
-import static fi.istrange.traveler.db.Tables.CARD_USER;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -168,7 +165,7 @@ public class AbstractResourceTest extends TestUtils{
 
     protected Long createUserWithPersonalTravelCard(String userName) {
         return createUserWithPersonalTravelCard(
-                userName, Date.valueOf("2017-10-04"), "gay",
+                userName, Date.valueOf("2017-10-04"), "other",
                 true,
                 Date.valueOf("2017-10-05"), Date.valueOf("2017-10-14"),
                 BigDecimal.ONE, BigDecimal.TEN
@@ -177,7 +174,7 @@ public class AbstractResourceTest extends TestUtils{
 
     protected Long createUserWithGroupTravelCard(String userName) {
         return createUserWithGroupTravelCard(
-                userName, Date.valueOf("2017-10-04"), "gay",
+                userName, Date.valueOf("2017-10-04"), "other",
                 true,
                 Date.valueOf("2017-10-05"), Date.valueOf("2017-10-14"),
                 BigDecimal.ONE, BigDecimal.TEN
